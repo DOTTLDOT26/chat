@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Chat</title>
+    <style>
+        /* Basic styling for the chat app */
+        body { font-family: Arial, sans-serif; background-color: #f0f0f0; }
+        #chat { height: 300px; overflow-y: scroll; border: 1px solid #ccc; padding: 10px; background-color: #fff; }
+        #message { width: calc(100% - 100px); }
+        #send { width: 80px; }
+    </style>
+</head>
+<body>
+    <div id="chat"></div>
+    <input type="text" id="message" placeholder="Type a message...">
+    <button id="send">Send</button>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        document.getElementById('send').onclick = function() {
+            const message = document.getElementById('message').value;
+            socket.emit('message', message);
+            document.getElementById('message').value = '';
+        };
+
+        socket.on('message', function(msg) {
+            const chat = document.getElementById('chat');
+            chat.innerHTML += `<div>${msg}</div>`;
+            chat.scrollTop = chat.scrollHeight;
+        });
+    </script>
+</body>
+</html>
